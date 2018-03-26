@@ -1,6 +1,5 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
-import App from './components/app';
+//import App from './components/app';
 
 // Import of custom pages
 import Login from './pages/login';
@@ -10,15 +9,30 @@ import StudentCourses from './pages/student/courses';
 import CoursesList from './pages/courses';
 
 // Definition on all application routes
-export default(
-    <Route path="/" component={App} >
-        <Route exact path="/" component={Login} />
-        <Route path="student" component={StudentHome} >
-            <Route path="courses" component={StudentCourses} />
-            <Route path="exams" component={StudentExams} />
-        </Route>
-        <Route path="courses" component={CoursesList} />
-        <Route path="login" component={Login} />
-        <Route path="*" component={Login} />
-    </Route>
-);
+const appRoutes = [ 
+        {
+            path: '/',
+            exact: true,
+            component: Login
+        },
+        {
+            path: '/students/:id',
+            component: StudentHome,
+            routes: [
+                {
+                    path: '/students/:id/courses',
+                    component: StudentCourses
+                },
+                {
+                    path: '/students/:id/exams',
+                    component: StudentExams
+                }
+            ]
+        },
+        {
+            path: '/courses',
+            component: CoursesList
+        }
+
+]
+export default appRoutes;

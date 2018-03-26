@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux'
 
 import { Jumbotron, Button } from 'react-bootstrap';
 
-export default class CoursesList extends Component {
+class Abcd extends Component {
+
+    navigate = (targetUrl) => {
+        this.state.props.push(targetUrl)
+    }
 
     render () {
         return (
@@ -13,9 +18,17 @@ export default class CoursesList extends Component {
                 This is the list of all available courses
                 </p>
                 <p>
-                    <Button bsStyle="primary">Home</Button>
+                    <Button bsStyle="primary" onClick={ () => { this.navigate("/student") } }>Home</Button>
                 </p>
           </Jumbotron>
         )
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+        push: (targetUrl) => dispatch(push(targetUrl)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Abcd);
