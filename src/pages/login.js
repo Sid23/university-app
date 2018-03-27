@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+// For react-router v4
+import { withRouter } from 'react-router-dom'
 
 import { Button, Form, FormControl, FormGroup, Col, ControlLabel } from 'react-bootstrap';
 
@@ -18,22 +19,31 @@ class Login extends Component {
 
     updateUser = (event) => {
         this.setState({user: event.target.value});
-    };
+    }
 
     updatePwd = (event) => {
         this.setState({pwd: event.target.value});
-    };
+    }
 
     doLogin = () => {
         // TODO
         console.log(`User, ${this.state.user}!`);
         console.log(`Password, ${this.state.pwd}`);
         this.props.userAuthentication(this.state.user, this.state.pwd)
-    };
+    }
 
-    //invoked immediately after updating occurs. This method is not called for the initial render.
-    componentDidUpdate(prevProps, prevState) {
-
+    componentDidUpdate() {
+        // Stable situation, called every time after 
+        if (this.props.authentication.loggedIn &&
+            this.props.authentication.authenticationHeaders &&
+            !this.props.authentication.error) {
+                console.log("Go to student home page!!");
+                console.log("props: ", this.props);
+                // Access to the history object and navigate to the logged student page
+                this.props.history.push(`/students/${this.props.authentication.currentUser.id}`);
+            } else {
+                console.log("Log in failed");
+            }
     }
 
     render () {
@@ -72,15 +82,14 @@ class Login extends Component {
                 {
                     this.props.authentication.error ? this.props.authentication.error : ""
                 }
-            </div>
-           
+            </div>  
         )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        // Get new state returned by login reducer
+        // Get new state returned by login reducer (authentication is the name of reducer used into combine reducer)
         authentication: state.authentication
     }
 }
@@ -88,8 +97,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         userAuthentication: (email, password) => dispatch(userAuthentication(email, password)),
-        push: (targetUrl) => dispatch(push(targetUrl)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+// with router used to integrate router in redux
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))

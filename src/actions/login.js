@@ -1,7 +1,7 @@
 // Define actions used by action reducer
 // each action has its own type to be identified and its payload (useful data)
 import { LoginActions } from "./"
-import { serverRequest } from './shared';
+import { serverRequest, getStudentDetails } from './shared';
 
 export function userAuthentication(email, password) {
     console.log("LOGIN action!");
@@ -14,7 +14,7 @@ export function userAuthentication(email, password) {
             {},
             // Body of the request
             {'email': email, 'password': password},
-            true)
+            null)
             .then(
                 response => {
                     console.log("SERVER RESPONSE: ", response);
@@ -37,7 +37,7 @@ export function userAuthentication(email, password) {
                     dispatch({
                         type: LoginActions.DO_LOGIN,
                         payload: {
-                            currentUser: getUserDetails(response),
+                            currentUser: getStudentDetails(response),
                             authenticationHeaders: loginCredentials
                         }
                     })
@@ -52,13 +52,3 @@ export function userAuthentication(email, password) {
     }
 }
 
-function getUserDetails(response) {
-    return {
-        id: response.data.id,
-        name: response.data.name,
-        surname: response.data.surname,
-        email: response.data.email,
-        admin: response.data.type,
-        image : response.data.image
-    }
-}

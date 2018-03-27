@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { SERVER_URL } from '../config/url';
 
-export function serverRequest(relativePath, method, header, body, noLoginCredentials = false) {
+export function serverRequest(relativePath, method, header, body, authHeaders = null) {
     return axios.request({
         url: SERVER_URL + relativePath,
         method: method,
@@ -11,7 +11,7 @@ export function serverRequest(relativePath, method, header, body, noLoginCredent
                         'Content-Type': 'application/json'
                     },
                     // Header require login credentials?
-                    noLoginCredentials ? null : null,
+                    authHeaders ? authHeaders : null,
                     header
                 ),
         // body of the request
@@ -20,4 +20,16 @@ export function serverRequest(relativePath, method, header, body, noLoginCredent
             return status < 500; // Reject only if the status code is greater than or equal to 500
         }
     })
+}
+
+// Function that return a student object from a backend serrver response
+export function getStudentDetails(serverResponse) {
+    return {
+        id: serverResponse.data.id,
+        name: serverResponse.data.name,
+        surname: serverResponse.data.surname,
+        email: serverResponse.data.email,
+        admin: serverResponse.data.type,
+        image : serverResponse.data.image
+    }
 }

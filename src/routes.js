@@ -1,6 +1,3 @@
-import React from 'react';
-//import App from './components/app';
-
 // Import of custom pages
 import Login from './pages/login';
 import StudentHome from './pages/student';
@@ -16,23 +13,25 @@ const appRoutes = [
             component: Login
         },
         {
+            path: '/students/:id/courses',
+            component: StudentCourses
+        },
+        {
+            path: '/students/:id/exams',
+            component: StudentExams
+        },
+        {
             path: '/students/:id',
+            exact: true,
             component: StudentHome,
-            routes: [
-                {
-                    path: '/students/:id/courses',
-                    component: StudentCourses
-                },
-                {
-                    path: '/students/:id/exams',
-                    component: StudentExams
-                }
-            ]
         },
         {
             path: '/courses',
             component: CoursesList
+        },
+        {
+            path: '**',
+            component: Login
         }
-
 ]
 export default appRoutes;
